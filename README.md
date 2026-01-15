@@ -11,6 +11,12 @@ Esta es una API REST desarrollada en Laravel para la gestión de anuncios (listi
     - Filtro por categorías.
     - Filtro por precio (Min/Max).
     - Filtro de fecha (`show_all`) para mostrar/ocultar anuncios vencidos.
+ 
+## Nota sobre funcionalidades de IA
+Para este reto, me enfoqué en preparar la arquitectura del sistema:
+- La base de datos ya incluye los campos necesarios para almacenar evaluaciones de IA.
+- La API ya entrega estos datos en las consultas de los productos (pueden verse en los registros de prueba adjuntos).
+- Queda planteada la conexión a servicios externos como futura mejora.
 
 # Instalación y Configuración
 1. Clonar el repositorio.
