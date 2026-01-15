@@ -1,0 +1,176 @@
+{
+	"info": {
+		"_postman_id": "ef6ca0d1-e8fd-4948-b9e9-2138a2131a7b",
+		"name": "TheGrint Golf Marketplace API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "51497568",
+		"_collection_link": "https://majozapata1505-4463008.postman.co/workspace/Maria-jose-Zapata's-Workspace~197be7ec-d78b-43cd-82d5-b96a2485bbb3/collection/51497568-ef6ca0d1-e8fd-4948-b9e9-2138a2131a7b?action=share&source=collection_link&creator=51497568"
+	},
+	"item": [
+		{
+			"name": "01. Authentication - Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"majo@example.com\",\r\n    \"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02. List Listings (with Filters)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/listings?show_all=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"listings"
+					],
+					"query": [
+						{
+							"key": "show_all",
+							"value": "true"
+						},
+						{
+							"key": "show_all",
+							"value": "false",
+							"disabled": true
+						},
+						{
+							"key": "category_id",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "condition",
+							"value": "New",
+							"disabled": true
+						},
+						{
+							"key": "min_price",
+							"value": "100",
+							"disabled": true
+						},
+						{
+							"key": "max_price",
+							"value": "500",
+							"disabled": true
+						},
+						{
+							"key": "keywords",
+							"value": "putter",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03. Create New Listing",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Putter Scotty Cameron Phantom X\",\r\n    \"price\": 852.10,\r\n    \"condition\": \"New\",\r\n    \"category_id\": 2,\r\n    \"description\": \"High-end precision putter. Never used, original grip and headcover included.\",\r\n    \"end_date\": \"2026-12-31\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/listings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"listings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04. Delete Listing",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/listings/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"listings",
+						"4"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
