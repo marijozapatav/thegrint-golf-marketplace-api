@@ -5,6 +5,7 @@ namespace App\Core\Services;
 use App\Models\Listing;
 use Illuminate\Support\Facades\Http;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ListingService
 {
@@ -56,8 +57,9 @@ class ListingService
     
      // Anuncio enriqueciéndo con IA de Gemini.
      
-    public function createListing(array $data, int $userId)
+public function createListing(array $data, int $userId)
     {
+
        
         $aiData = $this->enrichWithAI($data['title'], $data['condition']);
 
@@ -67,6 +69,8 @@ class ListingService
             'ai_market_value' => $aiData['market_value'] ?? 0,
         ]));
     }
+
+
 
     
     public function cancelListing(int $id, int $userId)
@@ -79,15 +83,20 @@ class ListingService
    
      // Conexión externa con el proveedor de IA (Gemini)
   
-  private function enrichWithAI($title, $condition)
-    {
-        try {
-            $apiKey = env('GEMINI_API_KEY');
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $apiKey;
 
-            $prompt = "Eres un experto en golf. Analiza: '$title' en condición '$condition'. 
-                       Responde estrictamente en formato JSON con dos campos: 
-                       'evaluation' (un párrafo técnico) y 'market_value' (un número decimal estimado en USD).";
+    private function enrichWithAI($title, $condition)
+{
+   
+    $results = ['evaluation' => 'N/A', 'market_value' => 0];
+
+    try {
+        $apiKey = env('GEMINI_API_KEY');
+        $url = "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=" . $apiKey;
+        
+        
+         $prompt = "You are a golf equipment expert. Analyze: '$title' in '$condition' condition. 
+         Respond strictly in JSON format with exactly two fields: 'evaluation'
+          (a detailed technical paragraph) and 'market_value' (an estimated decimal number in USD).";
 
             $response = Http::post($url, [
                 'contents' => [
@@ -99,24 +108,23 @@ class ListingService
                 ]
             ]);
 
-            if ($response->failed()) {
-                throw new Exception("AI Provider error");
-            }
+        $data = $response->json();
+        $aiText = $data['candidates'][0]['content']['parts'][0]['text'];
 
-            $data = $response->json();
-            $aiText = $data['candidates'][0]['content']['parts'][0]['text'];
-            
-            
-            $cleanJson = preg_replace('/^```json|```$/m', '', $aiText);
+     
+        preg_match('/\{.*\}/s', $aiText, $matches);
+        $jsonOnly = $matches[0] ?? null;
 
-            return json_decode(trim($cleanJson), true);
-
-        } catch (Exception $e) {
-            // Fail-safe: Si la IA falla
-            return [
-                'evaluation' => 'Evaluation pending (AI currently unavailable).',
-                'market_value' => 0
-            ];
+        if ($jsonOnly) {
+            $aiData = json_decode($jsonOnly, true);
+            $results['evaluation'] = $aiData['evaluation'] ?? 'N/A';
+            $results['market_value'] = $aiData['market_value'] ?? 0;
         }
+    } catch (\Exception $e) {
+        Log::error("Error IA: " . $e->getMessage());
     }
+
+   
+    return $results;
+}
 }
